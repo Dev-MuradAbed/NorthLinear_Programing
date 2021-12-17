@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, deprecated_member_use
+
 import 'package:camera/table_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,27 +26,28 @@ class _HomePageState extends State<HomePage> {
   TextEditingController supplyController = TextEditingController();
   TextEditingController demandController = TextEditingController();
   TextEditingController costsController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('North West'),
         actions: [
           IconButton(
               onPressed: () {
                 setState(() {
-                 supply = [];
-   demand = [];
-  newSupply = [];
-   newDemand = [];
-   costs = [];
-   cost1 = [];
- basicVariables = [];
-   basicVariables1 = [];
-   basic1 = [];
-   total = 0;
-   numberOfBasic = 0;
+                  supply = [];
+                  demand = [];
+                  newDemand = [];
+                  newSupply = [];
+                  costs = [];
+                  cost1 = [];
+                  basicVariables = [];
+                  basicVariables1 = [];
+                  basic1 = [];
+                  total = 0;
                 });
               },
               icon: const Icon(Icons.restart_alt_rounded))
@@ -56,7 +59,7 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width / 1.1,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,10 +83,13 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           width: 20,
                         ),
-                        two(list: supply,list2: newSupply, Controller: supplyController)
+                        two(
+                            list: supply,
+                            list2: newSupply,
+                            Controller: supplyController)
                       ],
                     ),
-                    Container(
+                    SizedBox(
                       height: 70,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
@@ -108,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width / 1.1,
                 child: Column(
                   children: [
@@ -131,10 +137,13 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           width: 20,
                         ),
-                        two(list: demand,list2: newDemand, Controller: demandController)
+                        two(
+                            list: demand,
+                            list2: newDemand,
+                            Controller: demandController)
                       ],
                     ),
-                    Container(
+                    SizedBox(
                       height: 70,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
@@ -163,7 +172,7 @@ class _HomePageState extends State<HomePage> {
               const Divider(
                 thickness: 3,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width / 1.1,
                 child: Column(
                   children: [
@@ -230,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                         )
                       ],
                     ),
-                    Container(
+                    SizedBox(
                       height: 70,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
@@ -247,12 +256,16 @@ class _HomePageState extends State<HomePage> {
                               ),
                               TextButton(
                                   onPressed: () {
-                                    setState(() {
-                                      costs.add(cost1);
-                                      basicVariables!.add(basic1);
-                                      cost1 = [];
-                                      basic1 = [];
-                                    });
+                                    if (cost1.isNotEmpty) {
+                                      setState(() {
+                                        costs.add(cost1);
+                                        basicVariables!.add(basic1);
+                                        cost1 = [];
+                                        basic1 = [];
+                                      });
+                                    } else {
+                                      showInSnackBar('the cost list is empty');
+                                    }
                                   },
                                   child: const Text("Add next Row"))
                             ],
@@ -276,26 +289,32 @@ class _HomePageState extends State<HomePage> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    getTheNwc();
-                    getTheTotalAmount();
-                    getNumberOfBasicVariables();
-                    convertSupplyAndDemand();
-                    print('demand = $demand');
-                    print('supply =  $supply');
-                    print('new demand = $newDemand');
-                    print('new supply =  $newSupply');
+                    if (newSupply!.isNotEmpty &&
+                        newDemand!.isNotEmpty &&
+                        costs.isNotEmpty) {
+                      getTheNwc();
+                      getTheTotalAmount();
+                      getNumberOfBasicVariables();
+                      convertSupplyAndDemand();
+                      print('demand = $demand');
+                      print('supply =  $supply');
+                      print('new demand = $newDemand');
+                      print('new supply =  $newSupply');
 
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => table(
-                                  sup: newSupply!,
-                                  dem: newDemand!,
-                                  costs: costs,
-                                  nwc: basicVariables,
-                                  totalAmount: total,
-                                  numberOfBasic: numberOfBasic,
-                                )));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => table(
+                                    sup: newSupply!,
+                                    dem: newDemand!,
+                                    costs: costs,
+                                    nwc: basicVariables,
+                                    totalAmount: total,
+                                    numberOfBasic: numberOfBasic,
+                                  )));
+                    } else {
+                      showInSnackBar('make sure that All inputs are not empty');
+                    }
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(8.5),
@@ -308,59 +327,54 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   // ignore: non_constant_identifier_names
-  Widget two({List? list,List? list2, TextEditingController? Controller}) {
-    return Container(
-      //   width:MediaQuery.of(context).size.width/2.5,
-      child: Row(
-        children: [
-          GestureDetector(
-            child: const SizedBox(
-              height: 30,
-              width: 30,
-              child: CircleAvatar(
-                backgroundColor: Colors.greenAccent,
-                child: Icon(Icons.add),
-              ),
+  Widget two({List? list, List? list2, TextEditingController? Controller}) {
+    return Row(
+      children: [
+        GestureDetector(
+          child: const SizedBox(
+            height: 30,
+            width: 30,
+            child: CircleAvatar(
+              backgroundColor: Colors.greenAccent,
+              child: Icon(Icons.add),
             ),
-            onTap: () {
+          ),
+          onTap: () {
+            setState(() {
+              list!.add(int.parse(Controller!.text));
+              list2!.add(int.parse(Controller.text));
+              Controller.text = '';
+            });
+          },
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        GestureDetector(
+          child: const SizedBox(
+            height: 30,
+            width: 30,
+            child: CircleAvatar(
+              backgroundColor: Colors.redAccent,
+              child: Icon(Icons.remove),
+            ),
+          ),
+          onTap: () {
+            if (list!.isNotEmpty) {
               setState(() {
-                list!.add(int.parse(Controller!.text));
-                list2!.add(int.parse(Controller.text));
-                Controller.text = '';
+                list.removeLast();
+                list2!.removeLast();
+                Controller!.text = '';
               });
-            },
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          GestureDetector(
-            child: const SizedBox(
-              height: 30,
-              width: 30,
-              child: CircleAvatar(
-                backgroundColor: Colors.redAccent,
-                child: Icon(Icons.remove),
-              ),
-            ),
-            onTap: () {
-              if (list!.isNotEmpty) {
-                setState(() {
-                  list.removeLast();
-                  list2!.removeLast();
-                  Controller!.text = '';
-                });
-              }
-            },
-          ),
-        ],
-      ),
+            }
+          },
+        ),
+      ],
     );
   }
 
   void getTheNwc() {
-
     for (int i = 0; i < supply!.length; i++) {
       for (int j = 0; j < demand!.length; j++) {
         int x = 0;
@@ -384,19 +398,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getTheTotalAmount() {
-    int total_cost = 0;
+    int totalCost = 0;
     for (int i = 0; i < supply!.length; i++) {
       for (int j = 0; j < demand!.length; j++) {
         setState(() {
-          total_cost =
-              total_cost + (basicVariables![i][j] * costs[i][j]) as int;
+          totalCost = totalCost + (basicVariables![i][j] * costs[i][j]) as int;
         });
       }
     }
-    print('Total cost = $total_cost');
+    print('Total cost = $totalCost');
 
     setState(() {
-      total = total_cost;
+      total = totalCost;
     });
   }
 
@@ -427,5 +440,15 @@ class _HomePageState extends State<HomePage> {
       supply = newSupply;
       demand = newDemand;
     });
+  }
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState!.showSnackBar(SnackBar(
+        content: Text(
+          value,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Colors.blueAccent.withOpacity(.6)));
   }
 }
