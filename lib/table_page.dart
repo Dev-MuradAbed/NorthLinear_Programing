@@ -86,7 +86,8 @@ class _TableState extends State<table> {
                           color: Colors.grey.withOpacity(0.1),
                           spreadRadius: 1,
                           blurRadius: 1,
-                          offset: const Offset(1, 1.5), // changes position of shadow
+                          offset: const Offset(
+                              1, 1.5), // changes position of shadow
                         ),
                       ],
                     ),
@@ -125,7 +126,8 @@ class _TableState extends State<table> {
                           color: Colors.grey.shade300.withOpacity(1),
                           spreadRadius: 1,
                           blurRadius: 1,
-                          offset: const Offset(1, 1.5), // changes position of shadow
+                          offset: const Offset(
+                              1, 1.5), // changes position of shadow
                         ),
                       ],
                     ),
@@ -178,7 +180,7 @@ class _TableState extends State<table> {
         child: const Center(
           child: Text(
             'supply',
-            style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
         ),
         // color: Colors.blueAccent,
@@ -237,7 +239,7 @@ class _TableState extends State<table> {
         child: const Center(
             child: Text(
           'demand',
-          style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         )),
       ),
       for (int i = 0; i < widget.dem!.length; i++)
