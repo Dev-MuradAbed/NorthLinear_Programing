@@ -180,7 +180,7 @@ class _TableState extends State<table> {
         child: const Center(
           child: Text(
             'supply',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
         // color: Colors.blueAccent,
@@ -239,7 +239,7 @@ class _TableState extends State<table> {
         child: const Center(
             child: Text(
           'demand',
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         )),
       ),
       for (int i = 0; i < widget.dem!.length; i++)
